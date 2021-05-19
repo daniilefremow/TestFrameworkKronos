@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Demoblaze Store Testing">
+    <listeners>
+        <listener class-name="org.uncommons.reportng.HTMLReporter"/>
+    </listeners>
+    <test name="Demoblaze Store">
+        <parameter name="phone" value="Samsung galaxy s6"/>
+        <classes>
+            <class name="tests.MainTest"/>
+        </classes>
+    </test>
+</suite>
