@@ -31,7 +31,7 @@ public abstract class MainPage {
     private WebElement logInConfirmBtn;
 
     @FindBy(xpath = "//a[@id = 'nameofuser']")
-    private WebElement greetingLine;
+    private WebElement welcomeLine;
 
     @CacheLookup
     @FindBy(xpath = "//li/a[@href = 'index.html']")
@@ -70,11 +70,11 @@ public abstract class MainPage {
                 .click(logInConfirmBtn).build().perform();
     }
 
-    public String getGreetingLine() {
+    public String getWelcomeLine() {
         new WebDriverWait(driver, 3)
-                .until(ExpectedConditions.visibilityOf(greetingLine));
+                .until(ExpectedConditions.visibilityOf(welcomeLine));
 
-        return greetingLine.getText();
+        return welcomeLine.getText();
     }
 
     public CartPage clickCartPageBtn() {
@@ -99,8 +99,8 @@ public abstract class MainPage {
         logOutBtn.click();
     }
 
-    public boolean isGreetingsDisplayed() {
-        return greetingLine.isDisplayed();
+    public boolean isWelcomeLineDisplayed() {
+        return welcomeLine.isDisplayed();
     }
 
 }

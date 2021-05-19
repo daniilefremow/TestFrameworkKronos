@@ -19,6 +19,12 @@ public class BaseTest {
 
     protected WebDriver driver;
 
+    @DataProvider(name = "orderDataProvider")
+    public static Object[][] orderDataProvider() {
+        return OrderManager
+                .getOrderObjectArray(OrderManager.getCSVOrderList());
+    }
+
     @BeforeClass
     public void setUp() {
         System.setProperty("webdriver.chrome.driver", "drivers/chromedriver.exe");
@@ -30,12 +36,6 @@ public class BaseTest {
         LOGGER.info("Url " + URL + " was opened");
         driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         LOGGER.info("Connection was established");
-    }
-
-    @DataProvider(name = "orderDataProvider")
-    public static Object[][] orderDataProvider() {
-        return OrderManager
-                .getOrderObjectArray(OrderManager.getCSVOrderList());
     }
 
     @AfterClass

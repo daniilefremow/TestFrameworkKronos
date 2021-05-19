@@ -26,14 +26,25 @@ public class MainTest extends BaseTest {
         this.orderCard = orderCard;
     }
 
+    /**
+     * This test tries to log in to the demoblaze.com
+     * The test will pass if Username will be presented in the
+     * welcome line
+     */
     @Test(description = "Log In to the demoblaze.com")
     public void logIn() {
         LOGGER.debug("Test 1: Log In to the demoblaze.com");
         homePage = HomePage.Login(driver);
         String expectedString = "Welcome " + USER.getUsername();
-        AssertionManager.assertEqualsAndLog(homePage.getGreetingLine(), expectedString);
+        AssertionManager.assertEqualsAndLog(homePage.getWelcomeLine(), expectedString);
     }
 
+    /**
+     * This test tries to add the product to the cart
+     * The test will pass if number of products in cart after adding
+     * will be greater then number of products before adding by 1
+     * @param product product to add
+     */
     @Parameters(value = "phone")
     @Test(description = "Add product to the cart", dependsOnMethods = "logIn")
     public void addProductToCart(String product) {
@@ -49,6 +60,12 @@ public class MainTest extends BaseTest {
         AssertionManager.assertEqualsAndLog(numberOfElementAfterAdd - numberOfElementBeforeAdd, 1);
     }
 
+    /**
+     * This test tries to delete the product from the cart
+     * The test will pass if number of products in cart after deleting
+     * will be less then number of products before deleting by 1
+     * @param product product to delete
+     */
     @Parameters(value = "phone")
     @Test(description = "Delete product from the cart", dependsOnMethods = "addProductToCart")
     public void deleteProductFromCart(String product) {
@@ -60,6 +77,12 @@ public class MainTest extends BaseTest {
         AssertionManager.assertEqualsAndLog(numberOfElementsBeforeDelete - numberOfElementsAfterDelete, 1);
     }
 
+    /**
+     * This test tries to place order and purchase it
+     * The test will pass if purchase confirm title will be equal to
+     * "Thank you for your purchase!"
+     * @param product product to purchase
+     */
     @Parameters(value = "phone")
     @Test(description = "Place order and purchase", dependsOnMethods = "deleteProductFromCart")
     public void placeOrder(String product) {
@@ -76,10 +99,15 @@ public class MainTest extends BaseTest {
         homePage = cartPage.clickConfirmPurchaseBtn();
     }
 
+    /**
+     * This test tries to log out from the demoblaze.com
+     * The test will pass if welcome line will not be presented
+     * on the page
+     */
     @Test(description = "Log Out from the demoblaze.com", dependsOnMethods = "placeOrder")
     public void logOut() {
         LOGGER.debug("Test 5: Delete product from the cart");
         homePage.clickLogOutBtn();
-        AssertionManager.assertFalseAndLog(homePage.isGreetingsDisplayed());
+        AssertionManager.assertFalseAndLog(homePage.isWelcomeLineDisplayed());
     }
 }
