@@ -64,8 +64,6 @@ public class CartPage extends MainPage {
             WebElement deleteBtn = deleteLinksList.get(i);
             if (productNameList.get(i).getText().equals(name)) {
                 new Actions(driver).click(deleteBtn).build().perform();
-                new WebDriverWait(driver, 3)
-                        .until(ExpectedConditions.invisibilityOf(deleteBtn));
             }
         }
     }
