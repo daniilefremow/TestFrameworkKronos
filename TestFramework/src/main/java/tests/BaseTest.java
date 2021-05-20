@@ -27,7 +27,6 @@ public class BaseTest {
 
     @BeforeClass
     public void setUp() {
-        System.setProperty("webdriver.chrome.driver", "drivers/chromedriver.exe");
         BrowserType browser = BrowserType.CHROME;
         driver = Driver.getWebDriver(browser);
         LOGGER.info(browser.name() + " browser was launched");
