@@ -4,18 +4,11 @@ import business_object.User;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
-import ui.page_object.CartPage;
-import ui.page_object.HomePage;
-import ui.page_object.ProductPage;
 import utils.AssertionManager;
 
 public class MainTest extends BaseTest {
 
     private static final User USER = User.getUser();
-
-    private HomePage homePage;
-    private CartPage cartPage;
-    private ProductPage productPage;
 
     private final String orderName;
     private final String orderCard;
@@ -34,7 +27,7 @@ public class MainTest extends BaseTest {
     @Test(description = "Log In to the demoblaze.com")
     public void logIn() {
         LOGGER.debug("Test 1: Log In to the demoblaze.com");
-        homePage = HomePage.Login(driver);
+        homePage.login();
         String expectedString = "Welcome " + USER.getUsername();
         AssertionManager.assertEqualsAndLog(homePage.getWelcomeLine(), expectedString);
     }
@@ -84,9 +77,9 @@ public class MainTest extends BaseTest {
      * @param product product to purchase
      */
     @Parameters(value = "phone")
-    @Test(description = "Place order and purchase", dependsOnMethods = "deleteProductFromCart")
+    @Test(description = "Place the order and purchase", dependsOnMethods = "deleteProductFromCart")
     public void placeOrder(String product) {
-        LOGGER.debug("Test 4: Delete product from the cart");
+        LOGGER.debug("Test 4: Place the order and purchase");
         productPage = homePage.clickProductByName(product)
                 .clickAddToCartBtn()
                 .clickOkAlert();
@@ -101,13 +94,13 @@ public class MainTest extends BaseTest {
 
     /**
      * This test tries to log out from the demoblaze.com
-     * The test will pass if welcome line will not be presented
+     * The test will pass if LogIn button will be presented
      * on the page
      */
     @Test(description = "Log Out from the demoblaze.com", dependsOnMethods = "placeOrder")
     public void logOut() {
         LOGGER.debug("Test 5: Delete product from the cart");
         homePage.clickLogOutBtn();
-        AssertionManager.assertFalseAndLog(homePage.isWelcomeLineDisplayed());
+        AssertionManager.assertTrueAndLog(homePage.isLogInBtnDisplayed());
     }
 }
