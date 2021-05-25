@@ -9,7 +9,7 @@ public class Driver {
 
     private static final Logger LOGGER = Logger.getLogger(Driver.class);
 
-    private static WebDriver driver = null;
+    private static WebDriver driver;
 
     private Driver() {
     }
@@ -25,14 +25,12 @@ public class Driver {
                     driver = getEdgeDriver();
                     LOGGER.info("The EdgeDriver was setup");
                     break;
-                default:
-                    try {
-                        throw new Exception();
-                    } catch (Exception e) {
-                        LOGGER.fatal("Incorrect browser type");
-                    }
             }
         }
+        return driver;
+    }
+
+    public static WebDriver getWebDriver() {
         return driver;
     }
 

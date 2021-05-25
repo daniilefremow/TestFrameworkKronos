@@ -1,36 +1,43 @@
 package ui.page_object;
 
 import business_object.User;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import utils.driver_interactions.Driver;
 
 import java.time.Duration;
 
-public abstract class MainPage {
+public class BasePage {
 
-    protected static final Duration WAIT = Duration.ofSeconds(1);
     private static final User USER = User.getUser();
+    protected static final Duration WAIT = Duration.ofSeconds(1);
 
-    protected WebDriver driver;
+    protected WebDriver driver = Driver.getWebDriver();
 
-    @FindBy(xpath = "//a[@id = 'login2']")
+    protected BasePage() {
+        PageFactory.initElements(driver, this);
+    }
+
+    @FindBy(id = "login2")
     private WebElement logInBtn;
 
-    @FindBy(xpath = "//input[@id = 'loginusername']")
+    @FindBy(id = "loginusername")
     private WebElement usernameField;
 
-    @FindBy(xpath = "//input[@id = 'loginpassword']")
+    @FindBy(id = "loginpassword")
     private WebElement passwordField;
 
-    @FindBy(xpath = "//button[@onclick = 'logIn()']")
+    @FindBy(css = "[onclick^='logIn']")
     private WebElement logInConfirmBtn;
 
-    @FindBy(xpath = "//a[@id = 'nameofuser']")
+    @FindBy(id = "nameofuser")
     private WebElement welcomeLine;
 
     @CacheLookup
@@ -38,27 +45,26 @@ public abstract class MainPage {
     private WebElement homePageBtn;
 
     @CacheLookup
-    @FindBy(xpath = "//a[@id = 'cartur']")
+    @FindBy(id = "cartur")
     private WebElement cartPageBtn;
 
-    @FindBy(xpath = "//a[@id = 'logout2']")
+    @FindBy(id = "logout2")
     private WebElement logOutBtn;
 
-    public MainPage clickLogInBtn() {
-        new Actions(driver).click(logInBtn).build().perform();
-        new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(usernameField));
+    public BasePage clickLogInBtn() {
+        logInBtn.click();
 
         return this;
     }
 
-    public MainPage setUsername() {
+    public BasePage setUsername() {
         usernameField.clear();
         usernameField.sendKeys(USER.getUsername());
 
         return this;
     }
 
-    public MainPage setPassword() {
+    public BasePage setPassword() {
         passwordField.clear();
         passwordField.sendKeys(USER.getPassword());
 
@@ -66,8 +72,14 @@ public abstract class MainPage {
     }
 
     public void clickLogInConfirmBtn() {
-        new Actions(driver).pause(WAIT)
-                .click(logInConfirmBtn).build().perform();
+        logInConfirmBtn.click();
+    }
+
+    public void login() {
+        clickLogInBtn()
+                .setUsername()
+                .setPassword()
+                .clickLogInConfirmBtn();
     }
 
     public String getWelcomeLine() {
@@ -78,29 +90,28 @@ public abstract class MainPage {
     }
 
     public CartPage clickCartPageBtn() {
-        new WebDriverWait(driver, 3)
-                .until(ExpectedConditions.elementToBeClickable(cartPageBtn));
         cartPageBtn.click();
 
-        return new CartPage(driver);
+        return new CartPage();
     }
 
     public HomePage clickHomePage() {
-        new WebDriverWait(driver, 3)
-                .until(ExpectedConditions.elementToBeClickable(homePageBtn));
         homePageBtn.click();
 
-        return new HomePage(driver);
+        return new HomePage();
     }
 
     public void clickLogOutBtn() {
-        new WebDriverWait(driver, 3)
-                .until(ExpectedConditions.elementToBeClickable(logOutBtn));
         logOutBtn.click();
     }
 
-    public boolean isWelcomeLineDisplayed() {
-        return welcomeLine.isDisplayed();
+    public boolean isLogInBtnDisplayed() {
+        try {
+            new WebDriverWait(driver, 3).until(ExpectedConditions.visibilityOf(logInBtn));
+            return logInBtn.isDisplayed();
+        } catch (TimeoutException e) {
+            return logInBtn.isDisplayed();
+        }
     }
 
 }

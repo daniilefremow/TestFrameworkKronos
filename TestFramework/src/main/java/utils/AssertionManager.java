@@ -12,8 +12,8 @@ public class AssertionManager {
         Assert.assertEquals(actualResult, expectedResult);
     }
 
-    public static void assertFalseAndLog(boolean expression) {
-        LOGGER.info("Expected result (" + false + "), actual result (" + expression + ")");
-        Assert.assertFalse(expression);
+    public static void assertTrueAndLog(boolean expression) {
+        LOGGER.info("Expected result (" + true + "), actual result (" + expression + ")");
+        Assert.assertTrue(expression);
     }
 }

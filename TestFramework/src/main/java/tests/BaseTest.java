@@ -6,6 +6,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import test_data.OrderManager;
+import ui.page_object.CartPage;
+import ui.page_object.HomePage;
+import ui.page_object.ProductPage;
 import utils.PropertyReader;
 import utils.driver_interactions.BrowserType;
 import utils.driver_interactions.Driver;
@@ -17,7 +20,9 @@ public class BaseTest {
     private static final String URL = PropertyReader.getProperty("url");
     protected static final Logger LOGGER = Logger.getLogger(BaseTest.class);
 
-    protected WebDriver driver;
+    protected HomePage homePage;
+    protected CartPage cartPage;
+    protected ProductPage productPage;
 
     @DataProvider(name = "orderDataProvider")
     public static Object[][] orderDataProvider() {
@@ -27,17 +32,18 @@ public class BaseTest {
 
     @BeforeClass
     public void setUp() {
-        BrowserType browser = BrowserType.CHROME;
-        driver = Driver.getWebDriver(browser);
-        LOGGER.info(browser.name() + " browser was launched");
+        WebDriver driver = Driver.getWebDriver(BrowserType.CHROME);
+        homePage = new HomePage();
+        cartPage = new CartPage();
+        productPage = new ProductPage();
         driver.get(URL);
         driver.manage().window().maximize();
         LOGGER.info("Url " + URL + " was opened");
-        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         LOGGER.info("Connection was established");
     }
 
-    @AfterClass
+    @AfterClass(alwaysRun = true)
     public void cleanUp() {
         Driver.close();
     }

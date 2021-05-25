@@ -1,69 +1,59 @@
 package ui.page_object;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
-public class CartPage extends MainPage {
+public class CartPage extends BasePage {
 
     @FindBy(xpath = "//tbody//td[2]")
     private List<WebElement> productNameList;
 
-    @FindBy(xpath = "//a[contains(@onclick, 'delete')]")
+    @FindBy(css = "[onclick^='delete']")
     private List<WebElement> deleteLinksList;
 
-    @FindBy(xpath = "//input[@id = 'name']")
+    @FindBy(id = "name")
     private WebElement orderNameField;
 
-    @FindBy(xpath = "//input[@id = 'card']")
+    @FindBy(id = "card")
     private WebElement orderCardField;
 
-    @FindBy(xpath = "//button[contains(@class,'btn-success')]")
+    @FindBy(css = ".btn-success")
     private WebElement placeOrderBtn;
 
-    @FindBy(xpath = "//button[contains(@onclick, 'purchase')]")
+    @FindBy(css = "[onclick^='purchase']")
     private WebElement purchaseBtn;
 
-    @FindBy(xpath = "//div[contains(@class, 'sweet-alert')]//h2")
+    @FindBy(css = ".sweet-alert > h2")
     private WebElement purchaseConfirmTitle;
 
-    @FindBy(xpath = "//button[contains(@class, 'confirm')]")
+    @FindBy(css = ".confirm")
     private WebElement purchaseConfirmBtn;
 
-    public CartPage(WebDriver driver) {
-        this.driver = driver;
-        PageFactory.initElements(driver, this);
+    public CartPage() {
+        super();
     }
 
     public int getNumberOfElementsInCart() {
         new Actions(driver).pause(WAIT).build().perform();
-
         return productNameList.size();
     }
 
     public int getNumberOfElementInCartByName(String name) {
-        new Actions(driver).pause(WAIT).build().perform();
-        int counter = 0;
-        for (WebElement webElement : productNameList) {
-            if (webElement.getText().equals(name)) {
-                counter++;
-            }
-        }
-
-        return counter;
+        return (int) productNameList.stream()
+                .filter(element -> element.getText().equals(name))
+                .count();
     }
 
     public void deleteProductByName(String name) {
         for (int i = 0; i < productNameList.size(); i++) {
-            WebElement deleteBtn = deleteLinksList.get(i);
             if (productNameList.get(i).getText().equals(name)) {
-                new Actions(driver).click(deleteBtn).build().perform();
+                deleteLinksList.get(i).click();
+                break;
             }
         }
     }
@@ -107,6 +97,6 @@ public class CartPage extends MainPage {
         new Actions(driver).pause(WAIT)
                 .click(purchaseConfirmBtn).build().perform();
 
-        return new HomePage(driver);
+        return new HomePage();
     }
 }
